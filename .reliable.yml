@@ -1,0 +1,26 @@
+
+sudo: required
+
+language: node_js
+
+addons:
+
+env:
+  mirror:
+    nvm: https://npm.taobao.org/dist
+    npm: http://registry.npmjs.com
+
+
+services: 
+
+before_install:
+
+before_script: 
+
+script: make test-android
+
+after_script: npm -v
+
+after_failure: npm -v
+
+after_success:
