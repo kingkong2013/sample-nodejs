@@ -3,14 +3,13 @@
 const path = require('path');
 const _ = require('macaca-utils');
 const KEY_MAP = require('webdriver-keycode');
-const {
-  appendToContext
-} = require('macaca-reporter');
+const appendToContext = require('macaca-reporter').appendToContext;
+const asserters = require('./wd-asserters');
 
 // npm package wrapper sample: https://github.com/macaca-sample/webdriver-client
 
 module.exports = (wd, isIOS) => {
-  wd.addPromiseChainMethod('customback', function() {
+  wd.addPromiseChainMethod('customback', function () {
     if (isIOS) {
       return this
         .waitForElementByName('list')
@@ -23,7 +22,7 @@ module.exports = (wd, isIOS) => {
       .sleep(3000);
   });
 
-  wd.addPromiseChainMethod('appLogin', function(username, password) {
+  wd.addPromiseChainMethod('appLogin', function (username, password) {
     if (isIOS) {
       return this
         .waitForElementByXPath('//XCUIElementTypeTextField[1]')
@@ -41,7 +40,7 @@ module.exports = (wd, isIOS) => {
 
     return this
       .waitForElementsByClassName('android.widget.EditText', {}, 120000)
-      .then(function(els) {
+      .then(function (els) {
         return els[0];
       })
       .clear()
@@ -53,7 +52,7 @@ module.exports = (wd, isIOS) => {
       })
       .sleep(1000)
       .waitForElementsByClassName('android.widget.EditText')
-      .then(function(els) {
+      .then(function (els) {
         return els[1];
       })
       .clear()
@@ -66,7 +65,7 @@ module.exports = (wd, isIOS) => {
       .sleep(5000);
   });
 
-  wd.addPromiseChainMethod('changeToNativeContext', function() {
+  wd.addPromiseChainMethod('changeToNativeContext', function () {
     return this
       .contexts()
       .then(arr => {
@@ -75,7 +74,7 @@ module.exports = (wd, isIOS) => {
       });
   });
 
-  wd.addPromiseChainMethod('changeToWebviewContext', function() {
+  wd.addPromiseChainMethod('changeToWebviewContext', function () {
     if (isIOS) {
       return this
         .contexts()
@@ -104,7 +103,7 @@ module.exports = (wd, isIOS) => {
       .sleep(1000);
   });
 
-  wd.addPromiseChainMethod('testGetProperty', function() {
+  wd.addPromiseChainMethod('testGetProperty', function () {
     if (isIOS) {
       return this
         .waitForElementByName('list')
@@ -154,7 +153,7 @@ module.exports = (wd, isIOS) => {
       });
   });
 
-  wd.addPromiseChainMethod('customSaveScreenshot', function(context) {
+  wd.addPromiseChainMethod('customSaveScreenshot', function (context) {
     const filepath = path.join(__dirname, '..', 'screenshots', `${_.uuid()}.png`);
     const reportspath = path.join(__dirname, '..', 'reports');
     _.mkdir(path.dirname(filepath));
@@ -166,4 +165,33 @@ module.exports = (wd, isIOS) => {
       });
   });
 
+  wd.addPromiseChainMethod('gotoHomePage', function () {
+    if (isIOS) {
+      return this
+        .waitForElementsByClassName('XCUIElementTypeOther',asserters.isAllDisplayed(16),60000,1000)
+        .waitForElementByXPath('//XCUIElementTypeApplication[1]/XCUIElementTypeWindow[1]/XCUIElementTypeOther[1]/XCUIElementTypeOther[1]/XCUIElementTypeOther[1]/XCUIElementTypeOther[2]/XCUIElementTypeButton[1]')
+        .click()
+        .waitForElementByXPath('//XCUIElementTypeApplication[1]/XCUIElementTypeWindow[1]/XCUIElementTypeOther[1]/XCUIElementTypeOther[1]/XCUIElementTypeOther[1]/XCUIElementTypeOther[2]/XCUIElementTypeButton[2]')
+        .click()
+        .waitForElementByXPath('//XCUIElementTypeApplication[1]/XCUIElementTypeWindow[1]/XCUIElementTypeOther[1]/XCUIElementTypeOther[1]/XCUIElementTypeOther[1]/XCUIElementTypeOther[1]/XCUIElementTypeOther[1]/XCUIElementTypeButton[2]')
+        .click()
+        .waitForElementByXPath('//XCUIElementTypeApplication[1]/XCUIElementTypeWindow[1]/XCUIElementTypeOther[1]/XCUIElementTypeOther[1]/XCUIElementTypeOther[1]/XCUIElementTypeOther[2]/XCUIElementTypeButton[2]')
+        .click()
+    }
+  });
+
+  wd.addPromiseChainMethod('swipeTo', function (count) {
+    if (isIOS) {
+      for (var i = 0; i < count; i++) {
+        this.touch('drag', {
+          fromX: 10,
+          fromY: 496,
+          toX: 10,
+          toY: 200,
+          duration: 2
+        })
+      }
+      return this;
+    }
+  });
 };

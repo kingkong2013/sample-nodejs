@@ -49,5 +49,8 @@
     "contributor": "git-contributor"
   },
   "homepage": "https://macacajs.github.io",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "macaca-reporter": "^1.1.2"
+  }
 }
